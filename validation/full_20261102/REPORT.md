@@ -61,4 +61,4 @@ The archived trajectory-error fields are fractions despite the paper table perce
 
 Paper: https://arxiv.org/html/2605.29488v3
 
-Status: complete. Full protocol, split hashes and metrics: [results.json](results.json). Original reference fields: [paper_reference.json](paper_reference.json). Individual generated motions and batch caches are not redistributed here. Portable run commands: [evaluation guide](../../docs/EVALUATION.md).
+Status: complete. Full protocol, split hashes and metrics: [results.json](results.json). Original reference fields: [paper_reference.json](paper_reference.json). Individual generated motions and batch caches are not redistributed here. Protocol and original research entry points: [evaluation notes](../../docs/EVALUATION.md).

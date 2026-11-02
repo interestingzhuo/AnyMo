@@ -119,16 +119,13 @@ Each run saves `native.npz`, `report.json`, and `resolved_config.py`. Successful
 
 `report.json` includes the seed, conditions, sampler settings, strict-load status, and absolute trajectory errors when applicable. Failed nonfinite fitting stops explicitly and preserves the native output. See [data conventions](docs/DATA_FORMAT.md) and [troubleshooting](docs/TROUBLESHOOTING.md).
 
-## Training, evaluation, and tests
+## Training
 
 Training configurations and split lists are retained under `configs/` and `configs/data_paths/`. Prepare the complete training data and evaluator assets before using them; downloading the processed test subset is not sufficient for training. [Training notes](docs/TRAINING.md) describe the remaining setup.
 
-```bash
-python -m unittest discover -s tests -v
-python tools/check_release.py
-```
+## Evaluation
 
-The unit tests exercise coordinate recovery and the trajectory-gradient regression. Full evaluation on one H20 is now complete: **51,408 motions per generation condition** and **182,640 reconstruction motions**.
+Full evaluation on one H20 is now complete: **51,408 motions per generation condition** and **182,640 reconstruction motions**.
 
 | Metric | Paper archive | Full default reproduction |
 |---|---:|---:|
@@ -141,14 +138,16 @@ The unit tests exercise coordinate recovery and the trajectory-gradient regressi
 
 R@1 above follows released text→motion code. Both directions, candidate-group sizes and the historical-launcher limitation are documented in [evaluation instructions](docs/EVALUATION.md). Raw results and the paper comparison are preserved under [validation/full_20261102](validation/full_20261102/REPORT.md). This uses FP32, seed3407 and the native six-step sampler; no trajectory fitting is applied to benchmark results.
 
+The original research entry points remain `tools/test.py` and `tools/dist_test.sh`, with evaluation configurations under `configs/`. Asset requirements, protocol details and limits are described in [evaluation notes](docs/EVALUATION.md).
+
+## Tests
+
 ```bash
-python -m pip install -r requirements/benchmark.txt
-python tools/prepare_evaluation.py
-python tools/evaluate.py --check-only
-python tools/evaluate.py --out outputs/full_evaluation
+python -m unittest discover -s tests -v
+python tools/check_release.py
 ```
 
-See [evaluation instructions](docs/EVALUATION.md) for model/evaluator preparation, existing-data paths, smoke checks and resumable batch caches. The full run validates the model helpers and evaluators; the newly parameterized command is additionally smoke-tested as recorded in the validation notes.
+The tests cover CLI parameter validation, coordinate recovery and the trajectory-gradient regression. Strict publication checks also report third-party license conditions; see [release status](docs/RELEASE_STATUS.md).
 
 ## Citation
 

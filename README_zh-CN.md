@@ -95,14 +95,9 @@ python tools/check_release.py
 
 使用单卡 H20、FP32、种子3407、原生6步采样；评测未加入轨迹优化。R@1 沿用官方代码的文本→动作方向，两个方向均保存在原始结果中。历史测试启动命令无法找回，本次按作者确认的公开默认配置运行，最后一批有16个检索候选。
 
-```bash
-python -m pip install -r requirements/benchmark.txt
-python tools/prepare_evaluation.py
-python tools/evaluate.py --check-only
-python tools/evaluate.py --out outputs/full_evaluation
-```
+原始研究评测入口保留为 `tools/test.py` 和 `tools/dist_test.sh`，配置位于 `configs/`。[评测说明](docs/EVALUATION.md)记录资产要求与本次全量协议；[全量报告](validation/full_20261102/REPORT.md)和[原始指标](validation/full_20261102/results.json)继续保留。
 
-[评测说明](docs/EVALUATION.md)包含数据准备、路径覆盖、冒烟检查和断点续跑命令；[全量报告](validation/full_20261102/REPORT.md)与[原始指标](validation/full_20261102/results.json)已随仓库保存。全量结果验证了核心模型与评测逻辑，参数化新入口的检查状态见[验证说明](docs/VALIDATION.md)。数据约定见[数据格式](docs/DATA_FORMAT.md)。
+训练源码和配置已保留，但完整训练准备与多阶段训练尚未重新验证，详见[训练说明](docs/TRAINING.md)。数据约定见[数据格式](docs/DATA_FORMAT.md)。
 
 ## 许可证
 

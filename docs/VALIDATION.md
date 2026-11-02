@@ -22,12 +22,8 @@ A separate512-motion, three-seed diagnostic used the corrected canonical recover
 
 The earlier single selected-motion fitting result used an older helper with a different treatment of non-yaw rotations; it is superseded by these canonical-recovery checks and should not be advertised as a current release result.
 
-## Release wrapper checks
+## Repository tests
 
-The repository has CPU coordinate-recovery/gradient regressions and source/link checks. The newly parameterized evaluation command is checked with dependency-free `--help`, missing-asset preflight and a CUDA smoke run. Machine-readable smoke evidence is stored in `validation/portable_evaluation_smoke.json` when available. A limited smoke run is explicitly marked partial and must not be used as a quality benchmark. The entire multi-hour full benchmark has not been repeated solely to validate argument/path refactoring.
+The retained tests cover CLI help/invalid parameters and coordinate-recovery forward/gradient regressions. These four tests passed in the PyTorch environment. Source/link checks found no technical issues. Strict publication checks intentionally report the retained SnapMoGen non-commercial condition.
 
-### Portable wrapper verification — passed 2026-11-02
-
-The H20 smoke checked one reconstruction batch (64 motions), one text batch (32) and one text+trajectory batch (32), using existing assets in a separate directory. Feature vectors and trajectory errors were compared with the completed full run, and token IDs were checked for equality. It also verified cached-result reuse, the explicit `partial` label and rejection of a changed seed. Machine-readable evidence: [portable_evaluation_smoke.json](../validation/portable_evaluation_smoke.json).
-
-All seven CPU tests passed in the PyTorch environment. Publication source/link checks found no technical issues; strict publication mode intentionally still reports the retained SnapMoGen non-commercial condition. The GPU workload exited and keepalive was restored after verification. Test data, checkpoints, internal paths and credentials are not included in the evidence files.
+The full benchmark evidence above remains valid. The original research entry points remain `tools/test.py` and `tools/dist_test.sh`. No full training or audio benchmark claim is made here.

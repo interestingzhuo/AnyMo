@@ -1,87 +1,31 @@
-# Reproducing the full evaluation
+# Evaluation notes
 
-The portable entry point is `tools/evaluate.py`. It preserves the released datasets, random caption/crop logic, sampler, feature encoders and metric functions used in the 2026-11-02 full run. It runs on one CUDA GPU; it does not launch infrastructure-specific GPU occupancy processes.
+The original research entry points are `tools/test.py` and `tools/dist_test.sh`. Configurations are under `configs/`, including `eval_text.py`, `eval_speak.py`, `eval_dance.py` and `tokenizer_r_fsq.py`.
 
-## Assets
+## Required assets and original interfaces
 
-Use Python 3.11 and the PyTorch 2.5.1 CUDA environment from the root README:
+Prepare the data tree under `data/`, the published normalization arrays, matching model checkpoint/configuration and the TEMOS config/checkpoint. Original research module registration may also instantiate sentence-transformer training/evaluator assets; install the research dependencies from `requirements/evaluation.txt` and prepare the encoder assets referenced by each config. The minimal inference download helper does not prepare every asset needed by the original research runner.
 
 ```bash
-python -m pip install -r requirements/benchmark.txt
-python tools/download_assets.py
+# Original interface; inspect the selected config and prepare its assets first.
+python tools/test.py CONFIG CHECKPOINT --work-dir work_dirs/evaluation
+bash tools/dist_test.sh CONFIG CHECKPOINT 1
 ```
 
-Download/extract the pinned model bundle as documented in the README. Required files:
+`configs/eval_text.py` defaults to the 3B text+trajectory condition. Select the intended conditions and evaluator explicitly for text-only evaluation. These are the retained research interfaces, not a claim that this exact command was rerun from a fresh checkout during packaging. The full results below were obtained using the released model helpers, dataset/collate functions and metric implementations with the documented defaults.
+
+The processed-test dataset is pinned to revision `8baf0d5da5f5dcc44a1281f2d251dbaa04118209`. Its seven archive parts total approximately 59.8 GB compressed. Concatenate them in filename order and extract the `omnihumo/` tree under `data/`. All seven source shards were SHA256-verified for the recorded run. No raw test motions are committed here.
+
+Required checkpoint paths for the recorded run:
 
 ```text
 work_dirs/anymo_stage_3_3B_210e_48gpu/lite_epoch_210.pth
 work_dirs/tokenizer_r_fsq_2048cd_4res_200e/epoch_200.pth
 work_dirs/temos_50e/temos.py
 work_dirs/temos_50e/epoch_50.pth
-checkpoints/flan-t5-xl/                 # downloaded by download_assets.py
 ```
 
-Prepare the official test data and DistilBERT tokenizer/configuration:
-
-```bash
-python tools/prepare_evaluation.py
-```
-
-The helper downloads the seven processed-test shards at dataset revision `8baf0d5da5f5dcc44a1281f2d251dbaa04118209`, approximately 59.8 GB compressed. Allow additional space for the 11,415 extracted test files and evaluation caches. It checks every source shard against its Hugging Face LFS SHA256, extracts only regular files named in the published test lists, and writes `data/evaluation_manifest.json`. It does not redistribute test motions in Git.
-
-For an existing extracted dataset:
-
-```bash
-python tools/prepare_evaluation.py --backbone-only
-python tools/evaluate.py --data-root /path/to/test-data --check-only
-```
-
-`--data-root` must contain `omnihumo/`, not point inside it. The backbone helper fetches only configuration/tokenizer files pinned to `12040accade4e8a0f71eabdb258fecc2e7e948be`. Learned DistilBERT weights come from the published TEMOS checkpoint. Only its text and motion encoders are strictly loaded; the decoder, sentence-transformer training filter and losses are not used for these metrics. `sentence-transformers` is not needed for this entry point.
-
-## Run
-
-From the repository root:
-
-```bash
-python tools/evaluate.py --check-only
-python tools/evaluate.py --out outputs/full_evaluation
-```
-
-For assets stored separately:
-
-```bash
-python tools/evaluate.py \
-  --assets-dir /path/to/model-assets \
-  --data-root /path/to/test-data \
-  --out outputs/full_evaluation
-```
-
-All paths have explicit overrides: `--checkpoint`, `--config`, `--evaluator-config`, `--evaluator-checkpoint`, `--tokenizer-checkpoint`, `--text-backbone`, `--split-dir`. Run `python tools/evaluate.py --help` without GPU dependencies to see them.
-
-To run only part of the benchmark:
-
-```bash
-python tools/evaluate.py --phases text text_traj --out outputs/generation
-python tools/evaluate.py --phases reconstruction --out outputs/reconstruction
-```
-
-A short integration check:
-
-```bash
-python tools/evaluate.py --max-batches 1 --out outputs/benchmark_smoke
-```
-
-Limited runs are explicitly marked `partial` and are not paper benchmark results. A single batch gives a statistically meaningless FID; its purpose is verifying the pipeline. Use a different output directory for the full run.
-
-## Resume and outputs
-
-Re-run the same command to resume. Completed batches and phase results are reused. The run signature hashes model/evaluator/tokenizer files, normalization arrays, text-backbone assets, source and split lists; incompatible signatures are rejected. Each cached batch also stores its input digest and the CUDA RNG state after generation. Resume still reads preceding dataset batches to reproduce worker crop/caption state. A new process must keep the same dataset contents, dependencies, seed and CUDA environment. Test data mutation is detected for cached inputs, but the helper's manifest remains the source of archive integrity evidence.
-
-Outputs include `results.json`, `protocol.json`, `run_signature.json`, `progress.json`, `REPORT.md`, and one NPZ per completed batch. Batch NPZs store evaluator features, error statistics, lengths, sampled token IDs, captions, input hashes and RNG state. No optimizer updates or test-time fitting are applied to these benchmark predictions.
-
-The complete single-seed reference took about 2.7 hours for text, 3.8 hours for text + trajectory and 3.7 minutes for reconstruction on one H20. These are measured run times, not hardware-independent guarantees. Loading used about 18–24 GB GPU memory in this setup.
-
-## Exact protocol and comparison limits
+## Recorded full-run protocol and comparison limits
 
 - FP32, seed 3407, native six-step sampler and top-k filter threshold 0.9. Model weights and sampling logic are unchanged.
 - Text: all 3,213 dynamic-caption test files, 51,408 motions; `DefaultSampler(shuffle=True)`, two files per batch and four loader workers. Each file contains 16 motions. There are 1,606 retrieval groups of 32 and one final group of 16, matching the public default loader; that last group has fewer negatives than the paper's stated 32-candidate protocol.
