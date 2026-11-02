@@ -1,0 +1,23 @@
+--- a/index.html
++++ b/index.html
+@@ -138,6 +138,20 @@
+   <div class="dataset-copy"><h3>From videos to<br>multimodal motion.</h3><p>OmniHuMo turns diverse online videos into a corpus of <strong>3.2 million human motion sequences</strong>, spanning 5,048 hours of movement.</p><p>Every sequence is paired with <strong>1–3 text captions</strong>. An approximately 500-hour subset also includes temporally aligned speech or music, enabling learning across semantics, rhythm, and motion.</p><a class="inline-link" data-link="dataset" href="https://huggingface.co/datasets/L-yiheng/OmniHuMo" target="_blank" rel="noopener">Explore OmniHuMo on Hugging Face ↗</a></div></div>
+ 
+ </div></section>
++<section class="section reading-wrap" id="release">
++  <h2>Code, models, and reproducible inference</h2>
++  <p>The release is being prepared. The model and processed-test repositories below may require access until publication.</p>
++  <p><a class="pill" href="https://huggingface.co/human-motion-capture/AnyMo" target="_blank" rel="noopener">Models on Hugging Face</a>
++  <a class="pill" href="https://huggingface.co/datasets/human-motion-capture/processed_test_dataset_of_AnyMo" target="_blank" rel="noopener">Processed test assets</a>
++  <a class="pill" href="https://arxiv.org/abs/2605.29488" target="_blank" rel="noopener">Paper and citation</a></p>
++  <p>The prepared code includes text and trajectory inference with the released 3B checkpoint. Optional latent fitting improves pelvis-path tracking while keeping model weights fixed; foot contact is not explicitly constrained.</p>
++  <pre><code>python tools/infer.py \
++  --checkpoint work_dirs/anymo_stage_3_3B_210e_48gpu/lite_epoch_210.pth \
++  --prompt "A person turns their body while swinging both arms." \
++  --trajectory trajectory.npy --tta-steps 400</code></pre>
++  <p class="small-note">Inputs use pelvis XYZ in meters, Y-up, at30fps. Dataset previews elsewhere on this page are real dataset motion; they are not AnyMo-generated results. Consult the code README for installation, normalization and release status.</p>
++</section>
++
+ <section class="section reading-wrap citation-section" id="citation"><div class="citation-heading"><h2>BibTeX</h2><button id="copy-bibtex" class="copy-button">Copy BibTeX</button></div><pre><code id="bibtex-code">@misc{li2026anymoscalinganymodalityconditional,
+   title={AnyMo: Scaling Any-Modality Conditional Motion
+          Generation with Masked Modeling},

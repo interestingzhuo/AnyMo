@@ -1,0 +1,7 @@
+# Versions used in the verified Python 3.11 / PyTorch 2.5.1 inference environment.
+numpy==2.1.2
+mmengine==0.10.7
+transformers==4.57.1
+sentencepiece==0.2.1
+einops==0.8.1
+protobuf==6.32.1

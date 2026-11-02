@@ -1,0 +1,34 @@
+cff-version: 1.2.0
+message: "If you use AnyMo, please cite the paper below."
+title: "AnyMo: Scaling Any-Modality Conditional Motion Generation with Masked Modeling"
+type: software
+authors:
+  - family-names: Li
+    given-names: Yiheng
+  - family-names: Li
+    given-names: Zhuo
+  - family-names: Hou
+    given-names: Ruibing
+  - family-names: Chen
+    given-names: Yingjie
+  - family-names: Chang
+    given-names: Hong
+  - family-names: Liu
+    given-names: Hao
+  - family-names: Shan
+    given-names: Shiguang
+url: "https://interestingzhuo.github.io/anymo-page/"
+preferred-citation:
+  type: generic
+  title: "AnyMo: Scaling Any-Modality Conditional Motion Generation with Masked Modeling"
+  authors:
+    - {family-names: Li, given-names: Yiheng}
+    - {family-names: Li, given-names: Zhuo}
+    - {family-names: Hou, given-names: Ruibing}
+    - {family-names: Chen, given-names: Yingjie}
+    - {family-names: Chang, given-names: Hong}
+    - {family-names: Liu, given-names: Hao}
+    - {family-names: Shan, given-names: Shiguang}
+  year: 2026
+  doi: "10.48550/arXiv.2605.29488"
+  url: "https://arxiv.org/abs/2605.29488"
