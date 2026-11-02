@@ -10,7 +10,7 @@ Yiheng Li · Zhuo Li · Ruibing Hou · Yingjie Chen · Hong Chang · Hao Liu · 
 [![Models](https://img.shields.io/badge/Hugging_Face-Models-ffd21e)](https://huggingface.co/human-motion-capture/AnyMo)
 [![Dataset](https://img.shields.io/badge/Hugging_Face-OmniHuMo-ffd21e)](https://huggingface.co/datasets/L-yiheng/OmniHuMo)
 
-[Project Page](https://interestingzhuo.github.io/anymo-page/) · [arXiv](https://arxiv.org/abs/2605.29488) · [Paper PDF](https://arxiv.org/pdf/2605.29488) · [Hugging Face Models](https://huggingface.co/human-motion-capture/AnyMo) · [OmniHuMo Dataset](https://huggingface.co/datasets/L-yiheng/OmniHuMo) · [Processed Test Data](https://huggingface.co/datasets/human-motion-capture/processed_test_dataset_of_AnyMo)
+[GitHub](https://github.com/interestingzhuo/AnyMo) · [Project Page](https://interestingzhuo.github.io/anymo-page/) · [arXiv](https://arxiv.org/abs/2605.29488) · [Paper PDF](https://arxiv.org/pdf/2605.29488) · [Hugging Face Models](https://huggingface.co/human-motion-capture/AnyMo) · [OmniHuMo Dataset](https://huggingface.co/datasets/L-yiheng/OmniHuMo) · [Processed Test Data](https://huggingface.co/datasets/human-motion-capture/processed_test_dataset_of_AnyMo)
 
 [English](README.md) | [简体中文](README_zh-CN.md)
 

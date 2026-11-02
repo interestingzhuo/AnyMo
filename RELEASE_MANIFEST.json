@@ -21,13 +21,13 @@
     },
     {
       "path": "README.md",
-      "bytes": 9226,
-      "sha256": "d976867cad07d996ce9ad8fa26b5376a4a370b3c8a8ea322da24d03ac99d543a"
+      "bytes": 9280,
+      "sha256": "b73ec4609cc9a86857505c9a8cca7a5872d9c1400301017f53711c73bc23b8b5"
     },
     {
       "path": "README_zh-CN.md",
-      "bytes": 5577,
-      "sha256": "7125260d138a2188be9f4c61c136198ee30e3a6b100f9e9867c9fd531be1cb8c"
+      "bytes": 5638,
+      "sha256": "462d7a38af89f7d0bb431304458def49291e6f0bf05d4d16fa9a3162941c6251"
     },
     {
       "path": "THIRD_PARTY_NOTICES.md",
@@ -171,8 +171,8 @@
     },
     {
       "path": "docs/RELEASE_STATUS.md",
-      "bytes": 2294,
-      "sha256": "00a1a9ec5c272e28ff7d17b4ff1b3478ef8cc857f6d51788c379b3c751725778"
+      "bytes": 2287,
+      "sha256": "b42c99526a46e4b113f6ff8c3b49142bc6936d82dc6772f0265e4e8efe5069a6"
     },
     {
       "path": "docs/TRAINING.md",
@@ -346,8 +346,8 @@
     },
     {
       "path": "src/models/tokenizers/__init__.py",
-      "bytes": 446,
-      "sha256": "386de99855fce260805a69c6486e8874a4031b15c91378658b575c4525157a44"
+      "bytes": 509,
+      "sha256": "427e2f32c7529bd693479bca3575380bee2121d8cd51356ce355d013774c6c56"
     },
     {
       "path": "src/models/tokenizers/encdoc/__init__.py",

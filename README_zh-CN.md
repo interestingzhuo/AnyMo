@@ -2,7 +2,7 @@
 
 **Scaling Any-Modality Conditional Motion Generation with Masked Modeling**
 
-[项目主页](https://interestingzhuo.github.io/anymo-page/) · [arXiv 论文](https://arxiv.org/abs/2605.29488) · [论文 PDF](https://arxiv.org/pdf/2605.29488) · [Hugging Face 模型](https://huggingface.co/human-motion-capture/AnyMo) · [OmniHuMo 数据集](https://huggingface.co/datasets/L-yiheng/OmniHuMo) · [处理后的测试数据](https://huggingface.co/datasets/human-motion-capture/processed_test_dataset_of_AnyMo) · [English](README.md)
+[GitHub 代码](https://github.com/interestingzhuo/AnyMo) · [项目主页](https://interestingzhuo.github.io/anymo-page/) · [arXiv 论文](https://arxiv.org/abs/2605.29488) · [论文 PDF](https://arxiv.org/pdf/2605.29488) · [Hugging Face 模型](https://huggingface.co/human-motion-capture/AnyMo) · [OmniHuMo 数据集](https://huggingface.co/datasets/L-yiheng/OmniHuMo) · [处理后的测试数据](https://huggingface.co/datasets/human-motion-capture/processed_test_dataset_of_AnyMo) · [English](README.md)
 
 作者：Yiheng Li、Zhuo Li、Ruibing Hou、Yingjie Chen、Hong Chang、Hao Liu、Shiguang Shan。
 

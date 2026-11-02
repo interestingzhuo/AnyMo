@@ -8,7 +8,7 @@ Completed in this candidate:
 - Explicit text/trajectory CLI; no hard-coded checkpoint or interactive debugger.
 - Autograd-safe joint recovery and a regression test for the original in-place backward failure.
 - Minimal inference dependencies separated from optional evaluation dependencies and the legacy environment snapshot.
-- Inference module imports separated from evaluator initialization; stale exports of an absent causal-encoder module removed.
+- Inference module imports separated from evaluator initialization; the original tokenizer variants remain registered.
 - Original research code retained, active metric debugger blocks removed, portable launchers, relative split paths.
 - Package exclusion rules for checkpoints, datasets, caches, logs, credentials and local infrastructure helpers.
 
