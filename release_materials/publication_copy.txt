@@ -27,4 +27,4 @@ The current packaging pass verifies text/trajectory inference. Raw-audio feature
 Media labeling:
 Keep real OmniHuMo dataset previews labeled as dataset motion. Label generated results with model size, seed, conditions and whether400-step latent fitting was applied. Do not put the selected single-motion reproduction numbers in the paper benchmark table.
 
-Prepared changes and checks are recorded in ../docs/RELEASE_STATUS.md and the validation/ artifacts when available. The code license remains pending author selection.
+Prepared changes and checks are recorded in ../docs/RELEASE_STATUS.md and the validation/ artifacts when available. See LICENSE, NOTICE and THIRD_PARTY_NOTICES.md for the Apache-2.0 scope and retained component restrictions.

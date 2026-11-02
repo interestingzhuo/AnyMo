@@ -18,7 +18,7 @@ Yiheng Li · Zhuo Li · Ruibing Hou · Yingjie Chen · Hong Chang · Hao Liu · 
 
 AnyMo generates human motion from text, speech, music, trajectories, and combinations of these signals. It pairs a residual finite scalar quantization (R-FSQ) motion tokenizer with a masked Transformer. The accompanying OmniHuMo dataset contains 3.2 million motion sequences and 5,048 hours of motion.
 
-This release candidate provides a standalone **text / trajectory inference path for the released Stage3 3B checkpoint**, plus the original training and evaluation implementations. Speech/music feature extraction and full training/evaluation have not been validated as part of this packaging pass. See [release status](docs/RELEASE_STATUS.md).
+This release candidate provides a standalone **text / trajectory inference path for the released Stage3 3B checkpoint**, plus the original training and evaluation implementations. Full text/trajectory generation and tokenizer reconstruction were evaluated on the published test lists; speech/music feature extraction and full training have not been revalidated. See [release status](docs/RELEASE_STATUS.md).
 
 ## Installation
 
@@ -128,9 +128,27 @@ python -m unittest discover -s tests -v
 python tools/check_release.py
 ```
 
-The unit tests exercise coordinate recovery and the trajectory-gradient regression. A single-motion, three-seed reproduction check is documented in [validation notes](docs/VALIDATION.md); it is not a replacement for paper benchmark results.
+The unit tests exercise coordinate recovery and the trajectory-gradient regression. Full evaluation on one H20 is now complete: **51,408 motions per generation condition** and **182,640 reconstruction motions**.
 
-The newly packaged CLI still needs a fresh GPU integration run. The CPU tests and source checks passed, while the remote GPU recheck was blocked by an automatic permission-review timeout. Historical reproduction numbers are labeled separately in the validation notes.
+| Metric | Paper archive | Full default reproduction |
+|---|---:|---:|
+| Text FID ↓ | 55.5974 | **55.6296** |
+| Text R@1 ↑ | 75.0019% | **75.1167%** |
+| Text + trajectory FID ↓ | 41.4394 | **41.1119** |
+| Text + trajectory R@1 ↑ | 76.9881% | **77.0386%** |
+| Text + trajectory ADE ↓ | 27.1594 cm | **27.3120 cm** |
+| Tokenizer MPJPE ↓ | 13.2 mm | **13.2649 mm** |
+
+R@1 above follows released text→motion code. Both directions, candidate-group sizes and the historical-launcher limitation are documented in [evaluation instructions](docs/EVALUATION.md). Raw results and the paper comparison are preserved under [validation/full_20261102](validation/full_20261102/REPORT.md). This uses FP32, seed3407 and the native six-step sampler; no trajectory fitting is applied to benchmark results.
+
+```bash
+python -m pip install -r requirements/benchmark.txt
+python tools/prepare_evaluation.py
+python tools/evaluate.py --check-only
+python tools/evaluate.py --out outputs/full_evaluation
+```
+
+See [evaluation instructions](docs/EVALUATION.md) for model/evaluator preparation, existing-data paths, smoke checks and resumable batch caches. The full run validates the model helpers and evaluators; the newly parameterized command is additionally smoke-tested as recorded in the validation notes.
 
 ## Citation
 
@@ -148,4 +166,4 @@ The newly packaged CLI still needs a fresh GPU integration run. The CPU tests an
 
 ## License and acknowledgments
 
-The authors have not yet selected a code license for this release candidate; see [license status](LICENSE_STATUS.md). No code license is implied by the dataset license or the paper's arXiv distribution terms. Dataset, pretrained-model, and third-party implementation terms must be handled separately. Existing attribution is preserved; see [third-party notices](THIRD_PARTY_NOTICES.md).
+Original AnyMo code is licensed under [Apache-2.0](LICENSE), as selected by the authors. **Third-party components retain their own terms, including the non-commercial research restriction on SnapMoGen-derived code.** The complete repository must not be treated as unrestricted Apache-only software. See [licensing scope](LICENSE_STATUS.md), [NOTICE](NOTICE) and [third-party notices](THIRD_PARTY_NOTICES.md). Model weights, datasets and media have separate terms.

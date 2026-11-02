@@ -32,3 +32,6 @@ preferred-citation:
   year: 2026
   doi: "10.48550/arXiv.2605.29488"
   url: "https://arxiv.org/abs/2605.29488"
+
+# Original AnyMo contributions; third-party exceptions are documented separately.
+license: Apache-2.0

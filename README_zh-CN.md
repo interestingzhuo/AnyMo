@@ -8,7 +8,7 @@
 
 AnyMo 结合残差有限标量量化（R-FSQ）动作 tokenizer 和掩码 Transformer，支持文本、语音、音乐、轨迹及其组合条件。配套 OmniHuMo 数据集包含约 320 万条动作序列、5,048 小时动作数据。
 
-本发布候选首先整理了已经验证的 **Stage3 3B 文本／轨迹推理**。训练和评测代码一并保留，但完整训练、语音／音乐特征提取与完整评测还需独立验证，详见[发布状态](docs/RELEASE_STATUS.md)。
+本发布候选首先整理了已经验证的 **Stage3 3B 文本／轨迹推理**。完整文本／轨迹生成及 tokenizer 重建评测已完成；完整训练、语音／音乐特征提取及其评测尚未重新验证，详见[发布状态](docs/RELEASE_STATUS.md)。
 
 ## 安装
 
@@ -82,10 +82,28 @@ python -m unittest discover -s tests -v
 python tools/check_release.py
 ```
 
-已有单条真实动作、3 个种子的验证记录见[验证说明](docs/VALIDATION.md)，不能将其当成完整数据集指标。数据约定见[数据格式](docs/DATA_FORMAT.md)，训练准备见[训练说明](docs/TRAINING.md)，论文引用见英文 README 和 `CITATION.cff`。
+完整默认评测已完成：每种生成条件 **51,408 条动作**，重建 **182,640 条动作**。
 
-新整理入口的 CPU 回归和源文件检查已经通过，完整 GPU 整链路回归仍待完成：远端检查的自动权限审核连续超时。本包的验证说明已将历史复现数据与本次整理后的验证状态分别标明。
+| 指标 | 论文归档值 | 本次全量 |
+|---|---:|---:|
+| 纯文本 FID ↓ | 55.5974 | **55.6296** |
+| 纯文本 R@1 ↑ | 75.0019% | **75.1167%** |
+| 文本＋轨迹 FID ↓ | 41.4394 | **41.1119** |
+| 文本＋轨迹 R@1 ↑ | 76.9881% | **77.0386%** |
+| 文本＋轨迹 ADE ↓ | 27.1594 cm | **27.3120 cm** |
+| tokenizer MPJPE ↓ | 13.2 mm | **13.2649 mm** |
+
+使用单卡 H20、FP32、种子3407、原生6步采样；评测未加入轨迹优化。R@1 沿用官方代码的文本→动作方向，两个方向均保存在原始结果中。历史测试启动命令无法找回，本次按作者确认的公开默认配置运行，最后一批有16个检索候选。
+
+```bash
+python -m pip install -r requirements/benchmark.txt
+python tools/prepare_evaluation.py
+python tools/evaluate.py --check-only
+python tools/evaluate.py --out outputs/full_evaluation
+```
+
+[评测说明](docs/EVALUATION.md)包含数据准备、路径覆盖、冒烟检查和断点续跑命令；[全量报告](validation/full_20261102/REPORT.md)与[原始指标](validation/full_20261102/results.json)已随仓库保存。全量结果验证了核心模型与评测逻辑，参数化新入口的检查状态见[验证说明](docs/VALIDATION.md)。数据约定见[数据格式](docs/DATA_FORMAT.md)。
 
 ## 许可证
 
-代码许可证由作者暂缓确定，见 [LICENSE_STATUS.md](LICENSE_STATUS.md)。论文、数据、第三方代码和模型权重的许可分别处理，不能相互替代。
+作者已选定 [Apache-2.0](LICENSE) 用于 AnyMo 自有代码。**第三方组件保留原有条款，其中 SnapMoGen 派生代码仍受非商业研究限制**，不能将整个仓库理解为仅受 Apache-2.0 约束。详见[许可范围](LICENSE_STATUS.md)、[NOTICE](NOTICE)与[第三方说明](THIRD_PARTY_NOTICES.md)。模型权重、数据和媒体许可独立。

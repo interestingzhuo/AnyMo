@@ -16,6 +16,6 @@ These commands illustrate the interfaces, not an end-to-end training result from
 
 The launchers accept `MASTER_ADDR`, `PORT`, `NNODES` and `NODE_RANK` from the environment. Machine-specific RDMA settings were removed; configure them for the target cluster separately. No launcher starts a GPU occupancy script after training.
 
-Evaluation requires evaluator checkpoints and encoders separately, for example the TEMOS config/checkpoint and sentence-transformer assets referred to by `configs/eval_*.py`. Inference does not require these evaluator weights. Full audio, text-retrieval and dance benchmark reproduction remains unverified in this packaging pass. Model and evaluator registration is explicit through `src.register_all_modules()` in the research tools.
+Evaluation requires evaluator checkpoints and encoders separately, for example the TEMOS config/checkpoint and sentence-transformer assets referred to by `configs/eval_*.py`. Inference does not require these evaluator weights. Full text/trajectory and tokenizer evaluation has completed; see [evaluation instructions](EVALUATION.md). Speech/music benchmarks and full training remain unverified. Model and evaluator registration is explicit through `src.register_all_modules()` in the research tools.
 
 `requirements/legacy-freeze.txt` preserves the original dependency snapshot for comparison. It includes a CUDA-specific PyTorch build and is not the recommended portable installation command.

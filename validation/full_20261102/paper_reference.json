@@ -1,0 +1,27 @@
+{
+  "provenance": "Raw text.json and text_traj.json shipped beside Stage3 3B epoch210 in model bundle revision8b3f5719d4b0a0084c09a1c038266c511e6cb09f; selected reported fields; error fields are fractions/meters.",
+  "results": {
+    "text": {
+      "fid": 55.59741653693891,
+      "R1": 0.750019434079602,
+      "R2": 0.8684118470149254,
+      "R3": 0.9136349502487562,
+      "div": 46.712364196777344,
+      "matching_score_pred": 25.8786678314209,
+      "traj_err": 0.5211054104477612,
+      "loc_err": 0.2846467563176418,
+      "avg_err": 0.5050597275590643
+    },
+    "text_traj": {
+      "fid": 41.43938572096431,
+      "R1": 0.7698810634328358,
+      "R2": 0.8883123445273632,
+      "R3": 0.9308924129353234,
+      "div": 46.712364196777344,
+      "matching_score_pred": 25.384090423583984,
+      "traj_err": 0.32991293532338306,
+      "loc_err": 0.13738279905717507,
+      "avg_err": 0.27159383454467156
+    }
+  }
+}

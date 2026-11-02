@@ -5,7 +5,7 @@ window.ANYMO_CONFIG = {
   paperUrl: "https://arxiv.org/pdf/2605.29488",
   arxivUrl: "https://arxiv.org/abs/2605.29488",
   datasetUrl: "https://huggingface.co/datasets/L-yiheng/OmniHuMo",
-  codeUrl: "",          // Add the actual public repository URL to reveal the Code links.
+  codeUrl: "https://github.com/interestingzhuo/AnyMo",
   projectUrl: "https://interestingzhuo.github.io/anymo-page/",       // Set to the final public project URL for canonical / social metadata.
   contactEmail: "",     // Optional project contact; hidden until configured.
   authorUrls: {},       // e.g. {"Yiheng Li": "https://your-verified-homepage.example"}

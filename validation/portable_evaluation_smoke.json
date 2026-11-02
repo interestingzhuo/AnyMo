@@ -1,0 +1,41 @@
+{
+  "status": "passed",
+  "checks": {
+    "text": {
+      "max_differences": {
+        "gt": 0.0,
+        "pred": 0.0,
+        "text": 0.0,
+        "trajectory": 0.0
+      },
+      "tokens_equal": true
+    },
+    "text_traj": {
+      "max_differences": {
+        "gt": 0.0,
+        "pred": 0.0,
+        "text": 0.0,
+        "trajectory": 0.0
+      },
+      "tokens_equal": true
+    },
+    "reconstruction": {
+      "max_mpjpe_difference_mm": 0.0
+    },
+    "help": true,
+    "asset_preflight": true,
+    "partial_label": true,
+    "cached_resume": true,
+    "changed_seed_rejected": true
+  },
+  "torch": "2.5.1+cu124",
+  "sample_limit_batches": 1,
+  "description": "Portable CLI smoke only. Compared first-batch features, tokens and reconstruction with completed full-run caches. Not a new full quality benchmark.",
+  "implementation_sha256": {
+    "src/evaluation/__init__.py": "99d14a455fa273cbc3098fc96f80addcda9e86017a43c324ac3ead2c53e8abfa",
+    "src/evaluation/benchmark.py": "ca4c7b45856288e7134745f20df9e0378e8cdb65284e4f1c38052e5bb524f02a",
+    "src/evaluation/report.py": "0d275da23347b38aa7cc0b22ae56395cbc171b873ed148c13d8d79892ae90b83",
+    "src/evaluation/runtime.py": "cf5fb4c1b24ae32df9dc652d18977009be5593a88f1509ffa3122e2596ea15d5",
+    "tools/evaluate.py": "42a062deadc59af487bef736520f300ab7b4361b2ed38dde02d40671bacdac9f"
+  }
+}

@@ -1,24 +1,33 @@
-# Reproduction observations
+# Validation evidence
 
-**Packaging status:** four CPU regression tests passed in the existing PyTorch 2.5.1 environment. A fresh end-to-end GPU run of the new standalone CLI has not completed: automatic permission review timed out twice before the remote import check could start. The historical figures below describe the earlier reproduction, not a newly executed release-CLI benchmark.
+## Full default evaluation — completed 2026-11-02
 
-The packaging regression tests also exposed a semantic difference in the earlier autograd helper for non-yaw rotations. The release now strictly preserves the original recovery function's X/Z-only translation integration, with forward-equivalence tests on general 3D rotations. Historical latent-fitting numbers should be rechecked with this exact release implementation before being used as release-CLI results.
+Reference code commit: `397447f21ff23e5efaad7a48c44159c48b42608d`. Environment: Linux, Python 3.11, PyTorch 2.5.1+cu124, NVIDIA H20; FP32, seed3407, native six-step independent-mask sampling, top-k filter threshold0.9.
 
-The preparation work used the full Stage3 3B epoch210 checkpoint, strict loading, FP32, native 6-step independent-mask sampling, top-k threshold 0.9, and seeds 3407, 42, 2026. The reference environment was Python 3.11 / PyTorch 2.5.1+cu124 / NVIDIA H20. The release entry point additionally receives a regression smoke test recorded in `validation/release_smoke.json` when that check is available.
+- Text generation: 51,408 motions, FID55.6296, text→motion R@1 75.1167%.
+- Text + trajectory: 51,408 motions, FID41.1119, R@1 77.0386%, average path error27.3120cm.
+- Tokenizer reconstruction: 182,640 motions /11,415 files; root-relative MPJPE13.2649mm.
+- Standalone tokenizer state equals the embedded tokenizer state.
+- First reconstruction batch matches the original NumPy recovery + `ReconsMetric` to maximum0.0000153mm.
+- Native regression against the saved single-clip output: token equality and normalized maximum difference0.0.
+- Sampled codes outside FSQ[0,1919]: zero in both complete generation runs.
 
-The existing trajectory experiment used a selected 296-frame motion from the processed test dataset: `motion_caption_speak_pkl/0003533.pkl`, record 5, starting at frame 0. It contains turning, arm movement and side-to-side travel. No origin/scale alignment was applied when computing errors.
+[Full protocol and metrics](../validation/full_20261102/results.json) · [Paper comparison](../validation/full_20261102/REPORT.md) · [Commands and limitations](EVALUATION.md).
 
-| Condition | Mean pelvis ADE (m) | Mean final error (m) |
-|---|---:|---:|
-| Text only |0.8152|0.4708|
-| Trajectory only |0.7003|2.2748|
-| Text + trajectory |0.8857|1.1215|
-| Text + trajectory + 400-step latent fitting |0.1251|0.1329|
+The paper's historical launcher was unavailable; the author confirmed using public defaults. The final retrieval group has16 candidates rather than32. Both retrieval directions are saved. Diversity pair selection is seeded separately, so exact archived Diversity is not expected. This is not a complete training/audio reproduction.
 
-All three 400-step optimizations were finite at `lr=2e-4`. Four-limb motion variation remained similar before/after fitting. Approximate near-floor foot speed increased from 0.365 to 0.408 m/s, while the real reference's corresponding proxy was 0.297 m/s. This proxy is not a certified contact metric or a perceptual score.
+## Small-subset trajectory optimization
 
-The same motion's VQ reconstruction had approximately 0.134 m pelvis ADE and 0.035 m root-relative joint error. Forward joint recovery in the reproduction matched the selected NumPy reference within 4.77e-7 m.
+A separate512-motion, three-seed diagnostic used the corrected canonical recovery. On the same32 motions per seed,400-step latent fitting reduced ADE from29.906±1.531cm to4.429±1.233cm; FDE from60.510±5.208cm to6.480±2.000cm. All optimizations had finite losses and gradients. This uses a known cropped GT target path and is not the unoptimized full benchmark above. It does not establish foot-contact quality on arbitrary trajectories.
 
-These are observations from one selected motion, not representative dataset averages, paper benchmarks, or guarantees for arbitrary trajectories. Earlier synthetic straight/turn paths were fitted less successfully by the same defaults. Short generic text prompts also sometimes produced near-static motion.
+The earlier single selected-motion fitting result used an older helper with a different treatment of non-yaw rotations; it is superseded by these canonical-recovery checks and should not be advertised as a current release result.
 
-The publication package omits experiment pickles, raw reference sequences, large weight files and generated videos. Code, weights, source data and visualization media require separately reviewed release terms.
+## Release wrapper checks
+
+The repository has CPU coordinate-recovery/gradient regressions and source/link checks. The newly parameterized evaluation command is checked with dependency-free `--help`, missing-asset preflight and a CUDA smoke run. Machine-readable smoke evidence is stored in `validation/portable_evaluation_smoke.json` when available. A limited smoke run is explicitly marked partial and must not be used as a quality benchmark. The entire multi-hour full benchmark has not been repeated solely to validate argument/path refactoring.
+
+### Portable wrapper verification — passed 2026-11-02
+
+The H20 smoke checked one reconstruction batch (64 motions), one text batch (32) and one text+trajectory batch (32), using existing assets in a separate directory. Feature vectors and trajectory errors were compared with the completed full run, and token IDs were checked for equality. It also verified cached-result reuse, the explicit `partial` label and rejection of a changed seed. Machine-readable evidence: [portable_evaluation_smoke.json](../validation/portable_evaluation_smoke.json).
+
+All seven CPU tests passed in the PyTorch environment. Publication source/link checks found no technical issues; strict publication mode intentionally still reports the retained SnapMoGen non-commercial condition. The GPU workload exited and keepalive was restored after verification. Test data, checkpoints, internal paths and credentials are not included in the evidence files.

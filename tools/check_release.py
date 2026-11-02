@@ -41,7 +41,8 @@ def main():
                 if not target or '://' in target or target.startswith('mailto:'):continue
                 if not (path.parent/target).exists():issues.append(f'{relative}: missing local link {target}')
     blockers=[]
-    if not (ROOT/'LICENSE').is_file():blockers.append('Code license is intentionally pending author selection')
+    if not (ROOT/'LICENSE').is_file():blockers.append('Missing code license')
+    if (ROOT/'licenses/SnapMoGen.txt').is_file():blockers.append('SnapMoGen-derived components retain non-commercial research terms; Apache-2.0 covers original contributions only')
     result=dict(files_checked=count,technical_issues=issues,publication_blockers=blockers)
     print(json.dumps(result,indent=2))
     return 1 if issues else 2 if args.strict_publication and blockers else 0
