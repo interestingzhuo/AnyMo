@@ -4,7 +4,7 @@
 
 **Missing statistics.** Run `python tools/download_assets.py`, or set `--assets-dir` to an existing tree containing `data/*.npy` and `checkpoints/flan-t5-xl/`. Motion normalization and trajectory normalization are separate. Do not replace missing statistics with zeros/ones.
 
-**`e210.pth` not found.** The verified Stage3 3B bundle contains `lite_epoch_210.pth`. The old trajectory script used a different hard-coded name; the current entry point requires `--checkpoint` explicitly.
+**`e210.pth` not found.** The Stage3 3B bundle contains `lite_epoch_210.pth`. The inference entry point requires `--checkpoint` explicitly.
 
 **Checkpoint shape mismatch.** Use the matching archived model config, or the provided `configs/inference/anymo_3b.py` for the documented3B checkpoint. Do not use `strict=False` to hide architecture mismatches. Full released checkpoints include frozen T5 and tokenizer parameters; partial checkpoints are rejected.
 
@@ -12,6 +12,6 @@
 
 **Trajectory optimization backward failure.** The release uses functional root-velocity construction and translation addition instead of in-place slice updates. The regression tests cover both forward equivalence and finite-difference gradients. Do not wrap the optimization loop in `torch.inference_mode()` or `torch.no_grad()`.
 
-**Motion looks static.** Specific limb and temporal action descriptions can perform better than generic prompts. Increasing sample iterations did not consistently fix weak motion in the reproduction experiments. The release preserves the native independent-mask sampler; experimental shared-mask variants were not adopted as a default fix.
+**Motion looks static.** Specific limb and temporal action descriptions can perform better than generic prompts. Use a concrete description of the intended limbs, movement direction and action sequence.
 
 **Trajectory is ignored or the person slides.** Conditioning is soft. Use `--tta-steps 400` to fit decoder latents. Latent fitting constrains pelvis XYZ only and does not enforce contact or gait quality. Larger optimization learning rates can produce nonfinite values; the program stops and keeps `native.npz` in that case.

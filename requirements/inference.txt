@@ -1,4 +1,4 @@
-# Versions used in the verified Python 3.11 / PyTorch 2.5.1 inference environment.
+# Inference dependencies for Python 3.11 / PyTorch 2.5.1.
 numpy==2.1.2
 mmengine==0.10.7
 transformers==4.57.1

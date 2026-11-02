@@ -8,11 +8,11 @@
 
 AnyMo 结合残差有限标量量化（R-FSQ）动作 tokenizer 和掩码 Transformer，支持文本、语音、音乐、轨迹及其组合条件。配套 OmniHuMo 数据集包含约 320 万条动作序列、5,048 小时动作数据。
 
-本发布候选首先整理了已经验证的 **Stage3 3B 文本／轨迹推理**。完整文本／轨迹生成及 tokenizer 重建评测已完成；完整训练、语音／音乐特征提取及其评测尚未重新验证，详见[发布状态](docs/RELEASE_STATUS.md)。
+本仓库提供 AnyMo 模型、训练与评测代码，以及已发布 Stage3 3B 检查点的文本／轨迹推理接口。
 
 ## 安装
 
-推荐 Linux、Python 3.11、CUDA 和 PyTorch 2.5.1。已在 H20 上运行 CUDA 12.4 版本；原依赖快照使用 CUDA 12.1。本推理入口暂不支持 CPU 或 Apple MPS。
+使用 Linux、Python 3.11、CUDA 和 PyTorch 2.5.1。本推理入口暂不支持 CPU 或 Apple MPS。
 
 ```bash
 python3.11 -m venv .venv
@@ -23,7 +23,7 @@ python -m pip install -r requirements.txt
 python tools/download_assets.py
 ```
 
-3B 完整检查点约 17.6 GB，包含冻结的 T5 和动作 tokenizer 权重；不需要重复下载 T5 权重。H20 上显存分配约 17 GiB，建议预留 24 GB 以上显存和充足主机内存。64 GB 主机内存是加载完整检查点的实用起点，并非所有平台的最低配置。
+3B 完整检查点约 17.6 GB，包含冻结的 T5 和动作 tokenizer 权重；不需要重复下载 T5 权重。建议预留至少 24 GB 显存和足够加载完整检查点的主机内存。
 
 模型与归一化数据仓库如需授权，请先获得仓库访问权限，再用 `hf auth login` 登录只读 Token；不要把 Token 写入代码。
 
@@ -41,7 +41,7 @@ work_dirs/anymo_stage_3_3B_210e_48gpu/lite_epoch_210.pth
 configs/inference/anymo_3b.py
 ```
 
-该配置对应 24 层、32 个注意力头、3200 隐藏维度。其他模型需使用匹配配置；不能仅修改文件名切换模型。训练配置中的 7B 定义不代表已验证模型包中含有 7B 检查点。
+该配置对应 24 层、32 个注意力头、3200 隐藏维度。其他模型需使用匹配配置；不能仅修改文件名切换模型。训练配置中的 7B 定义不代表已发布模型包中含有 7B 检查点。
 
 ## 文本生成动作
 
@@ -68,36 +68,30 @@ python tools/infer.py \
 
 省略 `--prompt` 可运行纯轨迹条件；省略 `--tta-steps` 则只做原生条件生成。`tools/test_traj.py` 是要求轨迹输入、默认优化 400 步的兼容入口。
 
-轨迹优化固定模型权重，只更新解码前的连续 latent，最小化骨盆轨迹 XYZ 均方误差。默认 AdamW 参数为 `lr=2e-4`、`betas=(0.5, 0.9)`、`weight_decay=1e-6`。本候选修复了原轨迹恢复函数的反向传播问题。轨迹拟合没有加入脚底接触约束，跟随更准确并不等于消除滑步；增大学习率可能发散。
+轨迹优化固定模型权重，只更新解码前的连续 latent，最小化骨盆轨迹 XYZ 均方误差。默认 AdamW 参数为 `lr=2e-4`、`betas=(0.5, 0.9)`、`weight_decay=1e-6`。轨迹拟合没有加入脚底接触约束，跟随更准确并不等于消除滑步；增大学习率可能发散。
 
-## 输出和验证
+## 输出
 
 - `native.npz`：原生动作，包含 `normalized`、`motion`、`joints`、`tokens`、`prompt`、`fps`；有轨迹时还包含 `target_traj`。
 - `optimized.npz`：成功优化后的动作；其中的 tokens 是初始化时采样的码，没有把优化后的 latent 重新量化。
 - `report.json`：参数、随机种子、加载状态及轨迹误差。
 - `resolved_config.py`：本次实际使用的配置。
 
+## 训练
+
+训练配置和数据划分位于 `configs/` 和 `configs/data_paths/`。完整训练数据、归一化统计与预训练编码器需单独准备，详见[训练说明](docs/TRAINING.md)。
+
+## 评测
+
+使用 `tools/test.py` 或 `tools/dist_test.sh`，配置位于 `configs/`。运行前准备匹配的模型检查点、数据和评测编码器，详见[评测说明](docs/EVALUATION.md)。
+
+## 测试
+
 ```bash
 python -m unittest discover -s tests -v
-python tools/check_release.py
 ```
 
-完整默认评测已完成：每种生成条件 **51,408 条动作**，重建 **182,640 条动作**。
-
-| 指标 | 论文归档值 | 本次全量 |
-|---|---:|---:|
-| 纯文本 FID ↓ | 55.5974 | **55.6296** |
-| 纯文本 R@1 ↑ | 75.0019% | **75.1167%** |
-| 文本＋轨迹 FID ↓ | 41.4394 | **41.1119** |
-| 文本＋轨迹 R@1 ↑ | 76.9881% | **77.0386%** |
-| 文本＋轨迹 ADE ↓ | 27.1594 cm | **27.3120 cm** |
-| tokenizer MPJPE ↓ | 13.2 mm | **13.2649 mm** |
-
-使用单卡 H20、FP32、种子3407、原生6步采样；评测未加入轨迹优化。R@1 沿用官方代码的文本→动作方向，两个方向均保存在原始结果中。历史测试启动命令无法找回，本次按作者确认的公开默认配置运行，最后一批有16个检索候选。
-
-原始研究评测入口保留为 `tools/test.py` 和 `tools/dist_test.sh`，配置位于 `configs/`。[评测说明](docs/EVALUATION.md)记录资产要求与本次全量协议；[全量报告](validation/full_20261102/REPORT.md)和[原始指标](validation/full_20261102/results.json)继续保留。
-
-训练源码和配置已保留，但完整训练准备与多阶段训练尚未重新验证，详见[训练说明](docs/TRAINING.md)。数据约定见[数据格式](docs/DATA_FORMAT.md)。
+数据约定见[数据格式](docs/DATA_FORMAT.md)。
 
 ## 许可证
 

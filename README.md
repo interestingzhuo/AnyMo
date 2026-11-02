@@ -18,11 +18,11 @@ Yiheng Li · Zhuo Li · Ruibing Hou · Yingjie Chen · Hong Chang · Hao Liu · 
 
 AnyMo generates human motion from text, speech, music, trajectories, and combinations of these signals. It pairs a residual finite scalar quantization (R-FSQ) motion tokenizer with a masked Transformer. The accompanying OmniHuMo dataset contains 3.2 million motion sequences and 5,048 hours of motion.
 
-This release candidate provides a standalone **text / trajectory inference path for the released Stage3 3B checkpoint**, plus the original training and evaluation implementations. Full text/trajectory generation and tokenizer reconstruction were evaluated on the published test lists; speech/music feature extraction and full training have not been revalidated. See [release status](docs/RELEASE_STATUS.md).
+This repository provides the AnyMo model, training and evaluation code, and a text / trajectory inference interface for the released Stage3 3B checkpoint.
 
 ## Installation
 
-The verified inference environment uses **Linux, Python 3.11, PyTorch 2.5.1, and CUDA**. The original dependency snapshot used CUDA 12.1; reproduction also ran successfully with PyTorch 2.5.1 + CUDA 12.4 on an NVIDIA H20. CPU-only and Apple MPS inference are not supported by this entry point.
+Use **Linux, Python 3.11, PyTorch 2.5.1, and CUDA** for inference. CPU-only and Apple MPS inference are not supported by this entry point.
 
 From this repository's root:
 
@@ -34,7 +34,7 @@ python -m pip install torch==2.5.1 --index-url https://download.pytorch.org/whl/
 python -m pip install -r requirements.txt
 ```
 
-Plan for a GPU with 24 GB or more VRAM and sufficient host RAM; 64 GB host RAM is a practical starting point for loading the full 3B checkpoint. Observed GPU allocation was approximately 17 GiB on H20, not a hardware-independent minimum. The full checkpoint is approximately 17.6 GB and includes frozen T5 and motion-tokenizer parameters.
+Plan for a GPU with at least 24 GB VRAM and sufficient host RAM to load the full checkpoint. The full checkpoint is approximately 17.6 GB and includes frozen T5 and motion-tokenizer parameters.
 
 ## Assets and checkpoints
 
@@ -46,7 +46,7 @@ Download the small normalization and T5 tokenizer/configuration files:
 python tools/download_assets.py
 ```
 
-This does **not** download another copy of the T5 weights: the released full AnyMo checkpoint already contains them. The statistics come from the [processed test dataset](https://huggingface.co/datasets/human-motion-capture/processed_test_dataset_of_AnyMo), pinned to the verified dataset revision.
+This does **not** download another copy of the T5 weights: the released full AnyMo checkpoint already contains them. The statistics come from the [processed test dataset](https://huggingface.co/datasets/human-motion-capture/processed_test_dataset_of_AnyMo), pinned to the dataset revision.
 
 Download the model archives, then concatenate parts in filename order before extraction:
 
@@ -75,7 +75,7 @@ work_dirs/anymo_stage_3_3B_210e_48gpu/
   anymo_stage_3.py
 ```
 
-The supplied `configs/inference/anymo_3b.py` matches the archived 3B architecture: 24 layers, 32 attention heads, and hidden width 3200. Use a matching archived configuration for a different model size. Loading is strict; mismatched or incomplete checkpoints are rejected. Configurations mentioning 7B are training templates, not evidence that a 7B checkpoint is included in the verified bundle.
+The supplied `configs/inference/anymo_3b.py` matches the archived 3B architecture: 24 layers, 32 attention heads, and hidden width 3200. Use a matching archived configuration for a different model size. Loading is strict; mismatched or incomplete checkpoints are rejected. Configurations mentioning 7B are training templates, not evidence that a 7B checkpoint is included in the model bundle.
 
 ## Text-to-motion
 
@@ -102,7 +102,7 @@ python tools/infer.py \
 
 Omit `--prompt` for trajectory-only generation. Omit `--tta-steps` for native conditional generation. `tools/test_traj.py` is an alias requiring a trajectory and defaulting to 400 fitting steps.
 
-**Trajectory fitting updates decoder latents, not model weights.** It minimizes pelvis XYZ MSE using AdamW (`lr=2e-4`, `betas=(0.5, 0.9)`, `weight_decay=1e-6`). This release removes in-place operations that previously broke its backward pass. Native conditioning remains a soft constraint; fitting improves tracking on some inputs but does not guarantee natural foot contact or success on arbitrary paths. Larger learning rates can diverge.
+**Trajectory fitting updates decoder latents, not model weights.** It minimizes pelvis XYZ MSE using AdamW (`lr=2e-4`, `betas=(0.5, 0.9)`, `weight_decay=1e-6`). Native conditioning remains a soft constraint; fitting improves tracking on some inputs but does not guarantee natural foot contact or success on arbitrary paths. Larger learning rates can diverge.
 
 ## Outputs
 
@@ -125,29 +125,13 @@ Training configurations and split lists are retained under `configs/` and `confi
 
 ## Evaluation
 
-Full evaluation on one H20 is now complete: **51,408 motions per generation condition** and **182,640 reconstruction motions**.
-
-| Metric | Paper archive | Full default reproduction |
-|---|---:|---:|
-| Text FID ↓ | 55.5974 | **55.6296** |
-| Text R@1 ↑ | 75.0019% | **75.1167%** |
-| Text + trajectory FID ↓ | 41.4394 | **41.1119** |
-| Text + trajectory R@1 ↑ | 76.9881% | **77.0386%** |
-| Text + trajectory ADE ↓ | 27.1594 cm | **27.3120 cm** |
-| Tokenizer MPJPE ↓ | 13.2 mm | **13.2649 mm** |
-
-R@1 above follows released text→motion code. Both directions, candidate-group sizes and the historical-launcher limitation are documented in [evaluation instructions](docs/EVALUATION.md). Raw results and the paper comparison are preserved under [validation/full_20261102](validation/full_20261102/REPORT.md). This uses FP32, seed3407 and the native six-step sampler; no trajectory fitting is applied to benchmark results.
-
-The original research entry points remain `tools/test.py` and `tools/dist_test.sh`, with evaluation configurations under `configs/`. Asset requirements, protocol details and limits are described in [evaluation notes](docs/EVALUATION.md).
+Use `tools/test.py` or `tools/dist_test.sh` with the evaluation configurations under `configs/`. Prepare the matching model checkpoint, dataset, normalization statistics and evaluator assets first. See [evaluation](docs/EVALUATION.md) for the original interfaces and asset requirements.
 
 ## Tests
 
 ```bash
 python -m unittest discover -s tests -v
-python tools/check_release.py
 ```
-
-The tests cover CLI parameter validation, coordinate recovery and the trajectory-gradient regression. Strict publication checks also report third-party license conditions; see [release status](docs/RELEASE_STATUS.md).
 
 ## Citation
 

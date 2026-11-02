@@ -7,7 +7,7 @@ from src.utils.motion import accumulate_rotations_batch
 
 
 def legacy_recovery(x):
-    """Minimal original implementation retained only to reproduce the regression."""
+    """Reference implementation for coordinate and autograd regression tests."""
     b,t,_=x.shape
     inverse=accumulate_rotations_batch(rotation_6d_to_matrix(x[:,:,2:8])).transpose(-1,-2)
     pos=(inverse[:,:,None] @ x[:,:,8:74].reshape(b,t,22,3,1)).squeeze(-1)

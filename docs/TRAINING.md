@@ -12,10 +12,10 @@ python tools/train.py configs/tokenizer_r_fsq.py --work-dir work_dirs/tokenizer
 bash tools/dist_train.sh configs/anymo_stage_3.py 8 --work-dir work_dirs/stage3
 ```
 
-These commands illustrate the interfaces, not an end-to-end training result from this release pass. The Stage3 training template currently defines 7B; select the intended model size and a matching Stage2 checkpoint before starting it.
+The Stage3 training template currently defines 7B; select the intended model size and a matching Stage2 checkpoint before starting it.
 
-The launchers accept `MASTER_ADDR`, `PORT`, `NNODES` and `NODE_RANK` from the environment. Machine-specific RDMA settings were removed; configure them for the target cluster separately. No launcher starts a GPU occupancy script after training.
+The launchers accept `MASTER_ADDR`, `PORT`, `NNODES` and `NODE_RANK` from the environment. Configure RDMA and networking for the target cluster.
 
-Evaluation requires evaluator checkpoints and encoders separately, for example the TEMOS config/checkpoint and sentence-transformer assets referred to by `configs/eval_*.py`. Inference does not require these evaluator weights. Full text/trajectory and tokenizer evaluation has completed; see [evaluation instructions](EVALUATION.md). Speech/music benchmarks and full training remain unverified. Model and evaluator registration is explicit through `src.register_all_modules()` in the research tools.
+Evaluation requires evaluator checkpoints and encoders separately, for example the TEMOS config/checkpoint and sentence-transformer assets referred to by `configs/eval_*.py`. Inference does not require these evaluator weights. See [evaluation instructions](EVALUATION.md) for the research test interfaces. Model and evaluator registration is explicit through `src.register_all_modules()` in the research tools.
 
 `requirements/legacy-freeze.txt` preserves the original dependency snapshot for comparison. It includes a CUDA-specific PyTorch build and is not the recommended portable installation command.
