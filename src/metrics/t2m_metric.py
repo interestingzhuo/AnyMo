@@ -195,8 +195,8 @@ class Text2MotionMetric(BaseMetric):
         matching_score_real = np.array([item['matching_score_real'] for item in results]).sum() / count
         R_precision = np.array([item['R_precision'] for item in results]).sum(axis=0) / count
         matching_score_pred = np.array([item['matching_score_pred'] for item in results]).sum() / count
-        pred_motion_embd = np.concatenate([item['pred_motion_embd'].numpy() for item in results], axis=0)
-        gt_motion_embd = np.concatenate([item['gt_motion_embd'].numpy() for item in results], axis=0)
+        pred_motion_embd = np.concatenate([item['pred_motion_embd'].cpu().numpy() for item in results], axis=0)
+        gt_motion_embd = np.concatenate([item['gt_motion_embd'].cpu().numpy() for item in results], axis=0)
         gt_mu, gt_cov = calculate_activation_statistics(gt_motion_embd)
         mu, cov = calculate_activation_statistics(pred_motion_embd)
 

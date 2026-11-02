@@ -119,18 +119,30 @@ Each run saves `native.npz`, `report.json`, and `resolved_config.py`. Successful
 
 `report.json` includes the seed, conditions, sampler settings, strict-load status, and absolute trajectory errors when applicable. Failed nonfinite fitting stops explicitly and preserves the native output. See [data conventions](docs/DATA_FORMAT.md) and [troubleshooting](docs/TROUBLESHOOTING.md).
 
-## Training
+## Train
 
-Training configurations and split lists are retained under `configs/` and `configs/data_paths/`. Prepare the complete training data and evaluator assets before using them; downloading the processed test subset is not sufficient for training. [Training notes](docs/TRAINING.md) describe the remaining setup.
+Prepare the complete training data, normalization statistics and pretrained encoders as described in [Train](docs/TRAINING.md). Select the matching model configuration and initialization checkpoint.
+
+```bash
+python -m pip install -r requirements/evaluation.txt
+bash tools/dist_train.sh configs/tokenizer_r_fsq.py 8 --work-dir work_dirs/tokenizer_r_fsq_2048cd_4res_200e
+bash tools/dist_train.sh configs/train/anymo_stage_1_3b.py 8 --work-dir work_dirs/stage1_3b
+bash tools/dist_train.sh configs/train/anymo_stage_2_3b.py 8 --work-dir work_dirs/stage2_3b
+bash tools/dist_train.sh configs/train/anymo_stage_3_3b.py 8 --work-dir work_dirs/stage3_3b
+```
 
 ## Evaluation
 
-Use `tools/test.py` or `tools/dist_test.sh` with the evaluation configurations under `configs/`. Prepare the matching model checkpoint, dataset, normalization statistics and evaluator assets first. See [evaluation](docs/EVALUATION.md) for the original interfaces and asset requirements.
-
-## Tests
+Prepare the model checkpoint, test data and evaluator assets listed in [Evaluation](docs/EVALUATION.md).
 
 ```bash
-python -m unittest discover -s tests -v
+# Text + trajectory (default eval_text.py conditions)
+python tools/test.py configs/eval_text.py \
+  work_dirs/anymo_stage_3_3B_210e_48gpu/lite_epoch_210.pth
+
+# Tokenizer reconstruction
+python tools/test.py configs/tokenizer_r_fsq.py \
+  work_dirs/tokenizer_r_fsq_2048cd_4res_200e/epoch_200.pth
 ```
 
 ## Citation

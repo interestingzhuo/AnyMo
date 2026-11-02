@@ -27,6 +27,7 @@ class VQVAE(BaseModel):
         return x
 
     def forward_loss(self, motion, motion_length, **kwargs): 
+        frame_lengths = motion_length
         # encoder
         x_in = self.preprocess(motion)
         x_encoder = self.encoder(x_in, motion_length=motion_length)
@@ -42,7 +43,7 @@ class VQVAE(BaseModel):
         # decoder
         x_decoder = self.decoder(x_quantized, motion_length=motion_length)
         pred_motion = self.postprocess(x_decoder) # (B, T, C)
-        losses = self.recons_loss(pred_motion, motion, motion_length=motion_length, commit_loss=commit_loss)
+        losses = self.recons_loss(pred_motion, motion, motion_length=frame_lengths, commit_loss=commit_loss)
         
         return losses
 

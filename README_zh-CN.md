@@ -77,18 +77,30 @@ python tools/infer.py \
 - `report.json`：参数、随机种子、加载状态及轨迹误差。
 - `resolved_config.py`：本次实际使用的配置。
 
-## 训练
+## Train
 
-训练配置和数据划分位于 `configs/` 和 `configs/data_paths/`。完整训练数据、归一化统计与预训练编码器需单独准备，详见[训练说明](docs/TRAINING.md)。
-
-## 评测
-
-使用 `tools/test.py` 或 `tools/dist_test.sh`，配置位于 `configs/`。运行前准备匹配的模型检查点、数据和评测编码器，详见[评测说明](docs/EVALUATION.md)。
-
-## 测试
+按[训练说明](docs/TRAINING.md)准备完整训练数据、归一化统计和预训练编码器，选择与初始化检查点匹配的配置。
 
 ```bash
-python -m unittest discover -s tests -v
+python -m pip install -r requirements/evaluation.txt
+bash tools/dist_train.sh configs/tokenizer_r_fsq.py 8 --work-dir work_dirs/tokenizer_r_fsq_2048cd_4res_200e
+bash tools/dist_train.sh configs/train/anymo_stage_1_3b.py 8 --work-dir work_dirs/stage1_3b
+bash tools/dist_train.sh configs/train/anymo_stage_2_3b.py 8 --work-dir work_dirs/stage2_3b
+bash tools/dist_train.sh configs/train/anymo_stage_3_3b.py 8 --work-dir work_dirs/stage3_3b
+```
+
+## Evaluation
+
+按[评测说明](docs/EVALUATION.md)准备检查点、测试数据和评测编码器。
+
+```bash
+# 文本＋轨迹（eval_text.py 的默认条件）
+python tools/test.py configs/eval_text.py \
+  work_dirs/anymo_stage_3_3B_210e_48gpu/lite_epoch_210.pth
+
+# Tokenizer 重建
+python tools/test.py configs/tokenizer_r_fsq.py \
+  work_dirs/tokenizer_r_fsq_2048cd_4res_200e/epoch_200.pth
 ```
 
 数据约定见[数据格式](docs/DATA_FORMAT.md)。

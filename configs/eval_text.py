@@ -60,6 +60,8 @@ model=dict(
         text_encoder_name = 'flan-t5-xl', 
         max_text_length=128, 
         output_dim=llama_configs[model_size]['n_embd'],
+        pretrained=False,
+        local_files_only=True,
     ), 
     traj_encoder_cfg = dict(
         type='Encoder',

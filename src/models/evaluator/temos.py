@@ -6,7 +6,6 @@ from mmengine.model import BaseModel
 from typing import Optional, List
 from torch import Tensor
 from torch.distributions.distribution import Distribution
-from sentence_transformers import SentenceTransformer
 import torch.nn.functional as F
 
 @MODELS.register_module()
@@ -23,6 +22,7 @@ class TEMOS(BaseModel):
         self.motiondecoder = MODELS.build(motion_decoder_cfg)
         self.fact = None
         if loss_cfg.use_infonce_filter:
+            from sentence_transformers import SentenceTransformer
             self.filter_model = SentenceTransformer('checkpoints/sentence-transformers-paraphrase-MiniLM-L6-v2')
             for param in self.filter_model.parameters():
                 param.requires_grad = False
