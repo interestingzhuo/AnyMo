@@ -8,6 +8,8 @@ python -m pip install -r requirements/evaluation.txt
 
 ## Data and pretrained assets
 
+Follow [Data preparation](DATA_PREPARATION.md) for dataset downloads, processed record formats and split-list configuration. In particular, set Stage1's currently empty training list before launching it.
+
 - Place the complete training data under `data/omnihumo/`; keep split lists under `configs/data_paths/`. Processed test data is not a replacement for training data.
 - Put `mean_272.npy`, `std_272.npy`, `traj_mean.npy` and `traj_std.npy` under `data/`.
 - Audio training records need the precomputed `audio_feat` field (512 channels, 75 fps). Motion records use 272 channels at 30 fps. See [data format](DATA_FORMAT.md).
@@ -42,7 +44,9 @@ bash tools/dist_train.sh configs/tokenizer_r_fsq.py 8 \
 
 # Stage1
 bash tools/dist_train.sh configs/train/anymo_stage_1_3b.py 8 \
-  --work-dir work_dirs/stage1_3b
+  --work-dir work_dirs/stage1_3b \
+  --cfg-options \
+  train_dataloader.dataset.data_path_file="['configs/data_paths/omnihumo_motion_caption_dynamic.txt','configs/data_paths/omnihumo_motion_caption_static.txt']"
 
 # Stage2: point model.init_cfg.checkpoint to your Stage1 checkpoint.
 bash tools/dist_train.sh configs/train/anymo_stage_2_3b.py 8 \

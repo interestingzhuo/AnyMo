@@ -10,4 +10,4 @@ Use a NumPy array `(T,3)` in `.npy`, or an `.npz` with `target_traj`. Input path
 
 Training pickle files contain lists of records such as `motion_272`, `captions`, and optionally `audio_feat`. Training pickle files must come from a trusted source. Prepared test data is a subset and is not the complete training corpus. Speech/music input is precomputed audio features, not raw waveform input to the documented CLI.
 
-Split lists live in `configs/data_paths/`; data paths inside the lists are relative to the repository root. Source dataset preparation is documented at https://huggingface.co/datasets/L-yiheng/OmniHuMo .
+Split lists live in `configs/data_paths/`; data paths inside the lists are relative to the repository root. See [Data preparation](DATA_PREPARATION.md) for downloads, processed record schemas and split configuration, and the [OmniHuMo dataset](https://huggingface.co/datasets/L-yiheng/OmniHuMo) for source processing assets.

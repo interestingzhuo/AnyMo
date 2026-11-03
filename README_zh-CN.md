@@ -81,6 +81,8 @@ python tools/infer.py \
 
 ## Train
 
+数据下载、目录布局、记录格式、归一化与划分配置见 [Data preparation](docs/DATA_PREPARATION.md)。
+
 按[训练说明](docs/TRAINING.md)准备完整训练数据、归一化统计和预训练编码器，选择与初始化检查点匹配的配置。
 
 ```bash

@@ -123,6 +123,8 @@ Each run saves `native.npz`, `report.json`, and `resolved_config.py`. Successful
 
 ## Train
 
+See [Data preparation](docs/DATA_PREPARATION.md) for downloads, record schemas, normalization and split configuration.
+
 Prepare the complete training data, normalization statistics and pretrained encoders as described in [Train](docs/TRAINING.md). Select the matching model configuration and initialization checkpoint.
 
 ```bash

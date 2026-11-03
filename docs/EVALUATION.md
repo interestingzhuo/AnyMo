@@ -8,6 +8,8 @@ python -m pip install -r requirements/evaluation.txt
 
 ## Data and checkpoints
 
+See [Data preparation](DATA_PREPARATION.md) for the pinned test-data download and expected extraction layout.
+
 Extract the [processed-test dataset](https://huggingface.co/datasets/human-motion-capture/processed_test_dataset_of_AnyMo) to `data/omnihumo/`, concatenating archive parts in filename order before extraction. Place the published normalization arrays under `data/`.
 
 The model bundle described in the README contains:
