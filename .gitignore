@@ -19,6 +19,8 @@ data/*
 *.pkl
 *.npz
 *.npy
+!examples/figure_eight.npy
+!examples/walking_joints.npz
 *.tar
 *.tar.gz*
 dist/

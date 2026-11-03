@@ -6,4 +6,4 @@ The current release retains the text/trajectory inference interface and the exis
 - [x] **Data preparation documentation:** document downloads, directory layout, record schema, normalization and split configuration in [Data preparation](docs/DATA_PREPARATION.md).
 - [ ] **Data preparation tools:** add automated raw-data conversion, processed-record validation and split-list generation while preserving the official train/test separation.
 - [ ] **Standalone checkpoints:** publish Stage2 3B, Stage3 3B, motion-tokenizer and TEMOS-evaluator files separately, with matching configurations, SHA256 checksums and pinned download commands. Verify downloads from a clean directory.
-- [ ] **Examples and visualization:** include an analytic trajectory example, a generated motion preview and a documented NPZ-to-MP4 skeleton renderer with consistent 30 fps, world translation and Y-up coordinates.
+- [x] **Examples and visualization:** include an analytic trajectory, generated skeleton/MP4 preview and CPU skeleton renderer. See [Examples and visualization](examples/README.md).

@@ -106,6 +106,20 @@ Omit `--prompt` for trajectory-only generation. Omit `--tta-steps` for native co
 
 **Trajectory fitting updates decoder latents, not model weights.** It minimizes pelvis XYZ MSE using AdamW (`lr=2e-4`, `betas=(0.5, 0.9)`, `weight_decay=1e-6`). Native conditioning remains a soft constraint; fitting improves tracking on some inputs but does not guarantee natural foot contact or success on arbitrary paths. Larger learning rates can diverge.
 
+## Examples and visualization
+
+[![Generated walking preview](examples/walking.png)](examples/walking.mp4)
+
+Render the included generated skeleton without model weights or CUDA:
+
+```bash
+python -m pip install -r requirements/visualization.txt
+python tools/render_motion.py examples/walking_joints.npz \
+  --out outputs/walking_preview.mp4 --camera follow
+```
+
+The same command accepts `native.npz` and `optimized.npz` from inference. A synthetic figure-eight trajectory is included at `examples/figure_eight.npy`; use it with `--trajectory`, or create a custom path with `tools/make_trajectory.py`. See [Examples and visualization](examples/README.md) for generation commands, trajectory fitting and MP4/PNG export.
+
 ## Outputs
 
 Each run saves `native.npz`, `report.json`, and `resolved_config.py`. Successful fitting also saves `optimized.npz`. The original sampled tokens in the optimized file describe the initialization; optimized continuous latents are not re-quantized into new tokens.

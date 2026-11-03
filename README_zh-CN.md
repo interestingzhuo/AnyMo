@@ -72,6 +72,20 @@ python tools/infer.py \
 
 轨迹优化固定模型权重，只更新解码前的连续 latent，最小化骨盆轨迹 XYZ 均方误差。默认 AdamW 参数为 `lr=2e-4`、`betas=(0.5, 0.9)`、`weight_decay=1e-6`。轨迹拟合没有加入脚底接触约束，跟随更准确并不等于消除滑步；增大学习率可能发散。
 
+## Examples and visualization
+
+[![生成动作预览](examples/walking.png)](examples/walking.mp4)
+
+无需模型权重或 CUDA，即可将仓库附带的生成骨架导出为 MP4：
+
+```bash
+python -m pip install -r requirements/visualization.txt
+python tools/render_motion.py examples/walking_joints.npz \
+  --out outputs/walking_preview.mp4 --camera follow
+```
+
+该工具也可直接渲染推理生成的 `native.npz` 和 `optimized.npz`。仓库附带合成八字轨迹 `examples/figure_eight.npy`，可直接传入 `--trajectory`；也可用 `tools/make_trajectory.py` 生成其他长度、半径和高度的路径。生成命令、轨迹拟合和 MP4／PNG 导出说明见 [Examples and visualization](examples/README.md)。
+
 ## 输出
 
 - `native.npz`：原生动作，包含 `normalized`、`motion`、`joints`、`tokens`、`prompt`、`fps`；有轨迹时还包含 `target_traj`。
