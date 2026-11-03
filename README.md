@@ -20,6 +20,8 @@ AnyMo generates human motion from text, speech, music, trajectories, and combina
 
 This repository provides the AnyMo model, training and evaluation code, and a text / trajectory inference interface for the released Stage3 3B checkpoint.
 
+Planned extensions are tracked in [TODO](TODO.md).
+
 ## Installation
 
 Use **Linux, Python 3.11, PyTorch 2.5.1, and CUDA** for inference. CPU-only and Apple MPS inference are not supported by this entry point.

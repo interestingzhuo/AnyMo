@@ -10,6 +10,8 @@ AnyMo 结合残差有限标量量化（R-FSQ）动作 tokenizer 和掩码 Transf
 
 本仓库提供 AnyMo 模型、训练与评测代码，以及已发布 Stage3 3B 检查点的文本／轨迹推理接口。
 
+后续扩展计划见 [TODO](TODO.md)。
+
 ## 安装
 
 使用 Linux、Python 3.11、CUDA 和 PyTorch 2.5.1。本推理入口暂不支持 CPU 或 Apple MPS。
