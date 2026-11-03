@@ -10,6 +10,8 @@ python -m pip install -r requirements/evaluation.txt
 
 Follow [Data preparation](DATA_PREPARATION.md) for dataset downloads, processed record formats and split-list configuration. In particular, set Stage1's currently empty training list before launching it.
 
+Download initialization weights from the [Hugging Face model repository](https://huggingface.co/human-motion-capture/AnyMo); the [checkpoint inventory](CHECKPOINTS.md) lists their extracted paths and purposes.
+
 - Place the complete training data under `data/omnihumo/`; keep split lists under `configs/data_paths/`. Processed test data is not a replacement for training data.
 - Put `mean_272.npy`, `std_272.npy`, `traj_mean.npy` and `traj_std.npy` under `data/`.
 - Audio training records need the precomputed `audio_feat` field (512 channels, 75 fps). Motion records use 272 channels at 30 fps. See [data format](DATA_FORMAT.md).

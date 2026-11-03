@@ -10,6 +10,8 @@ python -m pip install -r requirements/evaluation.txt
 
 See [Data preparation](DATA_PREPARATION.md) for the pinned test-data download and expected extraction layout.
 
+Download the model, tokenizer and TEMOS checkpoints from the [Hugging Face model repository](https://huggingface.co/human-motion-capture/AnyMo); see [Model checkpoints](CHECKPOINTS.md) for the bundle layout.
+
 Extract the [processed-test dataset](https://huggingface.co/datasets/human-motion-capture/processed_test_dataset_of_AnyMo) to `data/omnihumo/`, concatenating archive parts in filename order before extraction. Place the published normalization arrays under `data/`.
 
 The model bundle described in the README contains:

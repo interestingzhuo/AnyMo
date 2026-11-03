@@ -40,6 +40,10 @@ Plan for a GPU with at least 24 GB VRAM and sufficient host RAM to load the full
 
 ## Assets and checkpoints
 
+**Model downloads: [Hugging Face · human-motion-capture/AnyMo](https://huggingface.co/human-motion-capture/AnyMo).**
+
+The model bundle contains Stage3 3B, Stage2 3B, the motion tokenizer and the TEMOS evaluator. See [Model checkpoints](docs/CHECKPOINTS.md) for their extracted paths, sizes and intended uses. These checkpoints are currently supplied inside the archive bundle.
+
 The code, checkpoints, and datasets are separate artifacts. If a Hugging Face repository requires access, first obtain access from its owner and run `hf auth login` with a read-enabled token. Do not put tokens in scripts or repository files.
 
 Download the small normalization and T5 tokenizer/configuration files:

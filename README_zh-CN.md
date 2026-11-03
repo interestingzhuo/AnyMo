@@ -27,7 +27,9 @@ python tools/download_assets.py
 
 3B 完整检查点约 17.6 GB，包含冻结的 T5 和动作 tokenizer 权重；不需要重复下载 T5 权重。建议预留至少 24 GB 显存和足够加载完整检查点的主机内存。
 
-模型与归一化数据仓库如需授权，请先获得仓库访问权限，再用 `hf auth login` 登录只读 Token；不要把 Token 写入代码。
+**模型下载：[Hugging Face · human-motion-capture/AnyMo](https://huggingface.co/human-motion-capture/AnyMo)。** 模型包包含 Stage3 3B、Stage2 3B、动作 tokenizer 和 TEMOS evaluator；各检查点的解压路径、大小和用途见[模型权重说明](docs/CHECKPOINTS.md)。目前这些文件随分卷压缩包提供。
+
+公开的模型仓库可直接下载；模型与归一化数据仓库如需授权，请先获得仓库访问权限，再用 `hf auth login` 登录只读 Token；不要把 Token 写入代码。
 
 ```bash
 hf download human-motion-capture/AnyMo \
