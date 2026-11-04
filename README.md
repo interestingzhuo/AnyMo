@@ -1,6 +1,6 @@
 <div align="center">
 
-# AnyMo
+# AnyMo (NeurIPS 2026)
 ### Scaling Any-Modality Conditional Motion Generation with Masked Modeling
 
 Yiheng Li · Zhuo Li · Ruibing Hou · Yingjie Chen · Hong Chang · Hao Liu · Shiguang Shan
